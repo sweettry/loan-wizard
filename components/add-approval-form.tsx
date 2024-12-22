@@ -11,11 +11,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { createApproval } from '@/app/actions/approvals';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 export function AddApprovalForm() {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [apNumber, setApNumber] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const { toast } = useToast();
 
   const toggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -24,13 +29,38 @@ export function AddApprovalForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitted AP Number:', apNumber);
-    setApNumber('');
-    setIsFormVisible(false);
-    if (formRef.current) {
-      formRef.current.reset();
+    setIsSubmitting(true);
+
+    try {
+      const result = await createApproval(apNumber);
+
+      if (result.success) {
+        toast({
+          title: 'Success',
+          description: 'Approval has been created',
+        });
+        setApNumber('');
+        setIsFormVisible(false);
+        if (formRef.current) {
+          formRef.current.reset();
+        }
+      } else {
+        toast({
+          title: 'Error',
+          description: result.error || 'Failed to create approval',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -59,12 +89,20 @@ export function AddApprovalForm() {
                   required
                   className='h-8 text-sm'
                   autoComplete='off'
+                  disabled={isSubmitting}
                 />
               </div>
             </CardContent>
             <CardFooter className='flex justify-end p-4 pt-0'>
-              <Button type='submit' size='sm'>
-                Submit
+              <Button type='submit' size='sm' disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit'
+                )}
               </Button>
             </CardFooter>
           </form>
