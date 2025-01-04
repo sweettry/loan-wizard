@@ -29,7 +29,7 @@ export default function Home() {
           </Select>
         </div>
         <div className="p-8">
-          <h1 className="mb-6 text-2xl font-semibold">Dashboard</h1>
+          <h1 className="mb-6 text-2xl font-semibold">MyDashboard</h1>
           <div className="space-y-6">
             <MetricsOverview />
             <Pipeline />
