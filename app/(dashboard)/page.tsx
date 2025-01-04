@@ -15,7 +15,7 @@ export default function Home() {
     <div className="flex min-h-screen bg-gray-100">
       <MainNav />
       <div className="flex-1 p-8">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Good afternoon, Erica</h1>
           <Select defaultValue="last-week">
             <SelectTrigger className="w-[180px]">

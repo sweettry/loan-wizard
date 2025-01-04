@@ -15,5 +15,6 @@ model Approval {
   customer  String   @default("")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userId    String
 }
 
